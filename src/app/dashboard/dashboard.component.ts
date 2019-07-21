@@ -185,7 +185,6 @@ export class DashboardComponent  implements  OnInit {
 
   public copyFromFirebaseToSQL() : void {
     //
-    debugger;
     if (!!this.newUserRecords) {
       this.newUserRecords.forEach( (record) => {
         this.dataService.createUserRecord( record )
