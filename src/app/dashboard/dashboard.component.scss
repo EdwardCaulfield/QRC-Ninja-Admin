@@ -1,0 +1,199 @@
+
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+  }
+  
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
+
+td,th {
+  text-align: center;
+} 
+
+.login-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -200px;
+    position:absolute;
+    top:50%; 
+    left:50%;
+}
+.radio-button {
+  margin-left: 5px;
+  // display: block;
+  text-align: left;
+  font-size: .8em;
+}
+
+.download-button {
+ 
+  margin-top: 10px;
+  width: 375px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+// mat-card {
+//   width: 50px;
+//   height: 50px;
+// }
+
+.mat-column-displayName {
+  flex: 0 0 260px;
+    justify-content: left;
+
+}
+.mat-column-shortName {
+  flex: 0 0 70px;
+  justify-content: center;
+}
+
+.mat-column-openNewTab {
+  flex: 0 0 70px;
+  justify-content: center;
+}
+
+.mat-column-headerLanguage {
+  flex: 0 0 45px;
+  margin-left: 5px;
+  justify-content: center;
+}
+
+.mat-column-callToActionLine1 {
+  margin-left: 5px;
+}
+
+.mat-column-delete {
+  flex: 0 0 50px;
+}
+  .warning {
+    text-align: center;
+    background-color: rgb(240, 142, 142);
+  }
+
+  .card {
+  /* needed styles below */
+    width: 100%;
+}
+  .card-container {
+  /* needed styles below */
+  display: flex;
+  justify-content: center;
+
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 2px;
+    padding: 2px;
+    background-color: white;
+  }
+  
+  .message-text {
+      text-align: left;
+      font-size: .5em;
+  }
+
+  .grid-item {
+    background-color: white;
+//    background-image: url('https://qrc.ninja/wp-content/uploads/2019/02/Beta.png');
+//    opacity: .5;
+    text-align: center;
+    padding: 0px;
+    font-size: 20px;
+    border-color: white;
+  }
+  
+  .item1 {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+    height: 600px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+  .item2 {
+    grid-column: 3 / span 2;
+    grid-row: 1 ;
+    align-content: center;
+    margin-top: 5%;
+  }
+  
+  .item3 {
+    grid-column: 1 / span 4;
+    grid-row: 2;
+  }
+
+  .parent {
+    position: relative;
+    width: 375px;
+    left: 0px;
+    background: white;
+    vertical-align: center;
+
+}
+
+.qrcode {
+    position: absolute;
+    margin:  auto;
+    top: 60px;
+    left: 65px;
+}
+
+.toggle {
+    align-items: left;
+    margin-left: 10px;
+    font-size: .8em;
+}
+
+.field-labels {
+    
+    align-items: left;
+    margin-left: -30px;
+    left: 0px;
+    font-size: .8em;
+
+}
+.labels {
+    
+    background: white;
+    display: block;
+    width: 310px;
+    text-align: center;
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16pt;
+    position: absolute;
+
+}
+
+.card {
+    min-width: 80%;
+}
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    max-width: 100%;
+}
+
+.mat-table {
+    overflow: auto;
+    max-height: 500px;
+}
+
+a {
+    cursor: pointer;
+}
+
+h1 {
+    align-content: center;
+}
+
+  
+

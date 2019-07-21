@@ -1,0 +1,17 @@
+/**
+* Theme Name: QRC Ninja Admin
+* Description: QRC Ninja Administration Tool
+* Version: 0.0.2
+* Template: twentyseventeen
+* Text Domain: qrc-ninja-admin
+**/
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+body {
+    margin: 0;
+}
+
+button {
+
+    background-color: orange;
+}

@@ -1,0 +1,26 @@
+.top-level-form {
+    
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 600px;
+
+}
+
+.example-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.example-form > * {
+    width: 100%;
+
+}
+
+.close {
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+}

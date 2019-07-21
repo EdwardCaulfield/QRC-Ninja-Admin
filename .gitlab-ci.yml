@@ -1,0 +1,10 @@
+stages:
+  - test
+
+jasmine-test:
+  image: node:latest
+  before_script:
+    - npm install jasmine -g --save
+  script:
+    - npm --version
+    - jasmine -v

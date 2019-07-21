@@ -1,0 +1,190 @@
+      <!-- <div *ngIf="!userIsLoggedIn()">
+        <button color="primary" class="login-button"  mat-raised-button (click)="doGoogleLogin()">Please click here to log
+          into your Google Account</button>
+      </div> -->
+<div class="grid-container " >
+  <div class="grid-item item1" style="width:700px;"  >
+    <form #newRecordForm="ngForm">
+      <div *ngIf="userIsLoggedIn()">
+        <h1>QR Code Record</h1>
+        <h5>Enter QR Code data in the fields below and click "Add QR Code". <br> Scroll down for a table of your QR Codes
+        </h5>
+        <h5>Logged in as {{ googleDisplayName }}</h5>
+        <div class="message-text" class="warning" *ngIf="recordCount >= maxRecords">
+          Maxumum number of records reached for beta test
+        </div>
+        <div class="form-group">
+          <label class="field-labels" for="displayName">Name</label>
+          <input #displayName="ngModel" type="text" minlength="1" maxlength={{maxNameLength}}
+            [(ngModel)]="activeRecord.displayName" placeholder="A name is required" class="form-control" id="displayName"
+            name="displayName" required>
+          <div class="message-text">
+            {{maxNameLength - activeRecord.displayName.length}} of {{maxNameLength}} characters available
+          </div>
+          <div class="warning" [hidden]="!duplicateDisplayName()">
+            The name {{activeRecord.displayName}} is already used
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-labels" for="urlString">URL</label>
+          <input #urlString="ngModel" type="url" minlength="1" maxlength={{urlStringMaxLength}}
+            [(ngModel)]="activeRecord.urlString" placeholder="A SECURE URL (https) is required" class="form-control"
+            id="urlString" name="urlString" required>
+          <div class="message-text">
+            {{urlStringMaxLength - activeRecord.urlString.length}} of {{urlStringMaxLength}} characters
+            available{{additionalURLMessage}}
+          </div>
+          <div class="warning" [hidden]="!urlIsInvalid">
+            The URL entered is invalid!
+          </div>
+          <div class="warning" [hidden]="!urlIsInvalid && !(!activeRecord.shortNameUsed && urlIsInsecure)">
+            The URL entered is insecure! It can only be used with a short name!
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-labels" for="callToActionLine1">Call to Action - Line 1</label>
+          <input #callToActionLine1="ngModel" maxlength={{maxCallToActionLength}} type="text"
+            [(ngModel)]="activeRecord.callToActionLine1" placeholder="Optional Call To Action line 1" class="form-control"
+            id="callToActionLine1" name="callToActionLine1">
+          <div class="message-text">
+            {{maxCallToActionLength - activeRecord.callToActionLine1.length}} of {{maxCallToActionLength}} characters
+            available
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-labels" for="callToActionLine2">Call to Action - Line 2</label>
+          <input type="text" [(ngModel)]="activeRecord.callToActionLine2" maxlength={{maxCallToActionLength}}
+            placeholder="Optional Call To Action line 2" class="form-control" id="callToActionLine2" name="callToActionLine2">
+          <div class="message-text">
+            {{maxCallToActionLength - activeRecord.callToActionLine2.length}} of {{maxCallToActionLength}} characters
+            available
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-slide-toggle class="toggle" #useShortname="ngModel"
+            (change)="setShortNameVariables( useShortname.value, true )" matInput [(ngModel)]="activeRecord.shortNameUsed"
+            name="useShortname">Use Short Name</mat-slide-toggle>
+          <mat-slide-toggle class="toggle" #openNewTab name="openNewTab" [(ngModel)]="activeRecord.openNewTab"
+            (change)="toggleOpenNewTab( openNewTab.value )" matInput>New Tab on Open</mat-slide-toggle>
+        </div>
+      
+        <button style="margin-left: 20px;" [disabled]="displayHasNoData()" button="submit" mat-raised-button color="primary"
+          (click)="clearActiveRecord()"> Clear Fields </button>
+        <button style="margin-left: 20px;" [disabled]="!newRecordForm.form.valid || !showAddNewRecordButton()" button="submit"
+          mat-raised-button color="primary" (click)="addQRCode()"> Add QR Code </button>
+        <button style="margin-left: 20px;" [disabled]="!showUpdateButton()" button="submit" mat-raised-button color="primary"
+          (click)="requestRecordUpdate()"> Update Record </button>
+      
+      </div>
+
+    </form>
+  </div>
+  <div class="grid-item item2" style="margin-left: 0px; width:100%"  >
+    <div style="width:350px;" *ngIf="userIsLoggedIn()">
+      <label>Header language</label><br>
+      <mat-radio-group class="radio-button" [(ngModel)]="selectedHeaderLanguage" layout="row">
+        <mat-radio-button class="radio-button" *ngFor="let language of headerLanguages" [value]="language.shortName"
+          (click)="changeLanguage(language)">{{language.longName}}</mat-radio-button>
+      </mat-radio-group>
+      <p></p>
+    </div>
+    <mat-card class="parent" >
+      <div [hidden]="!userIsLoggedIn()">
+        <mat-card-title>
+          Image Creation
+        </mat-card-title>
+        <mat-card-subtitle>
+          Right mouse click over the QR Code and select "copy image"
+        </mat-card-subtitle>
+        <canvas #myCanvas id="myCanvas" style="background:white;">
+        </canvas>      
+      <label [hidden]="!activeRecord.shortNameUsed || (activeRecord.shortNameUsed && !!activeRecord.shortName)"
+        class="warning">QR Codes using short names aren't generated until the record is saved</label>
+      </div>
+    </mat-card>
+    <!-- <button [disabled]="downloadButtonDisabled" mat-raised-button color="primary" class="download-button"
+          #downloadButton>Download Image</button> -->
+    <a *ngIf="userIsLoggedIn()" href={{imageData}} download="downloadFileName" [disabled]="downloadButtonDisabled" mat-raised-button
+      color="primary" class="download-button" #downloadButton>Download Image</a>
+      <div [hidden]="!isAdmin">
+        <button mat-raised-button (click)="copyFromFirebaseToSQL()" class="download-button" color="primary" >Copy to SQL</button>
+      </div>
+  </div>
+  <div class="grid-item item3" *ngIf="userIsLoggedIn()">
+    <div class="container" style="z-index: 1;">
+      <div fxLayout="row" fxLayoutAlign="center center" fxFlexFill class="content">
+        <mat-card class="card">
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" class="card-container">
+            QR Codes
+          </mat-card-title>
+          <mat-card-subtitle>{{recordCount}} of {{maxRecords}} records used</mat-card-subtitle>
+          <mat-card-content>
+            <div class="example-container mat-elevation-z8">
+              <mat-table #table [dataSource]="newUserRecords">
+                <ng-container matColumnDef="displayName">
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let element"><button mat-button
+                      (click)="editRecord(element.firebaseID)">{{element.displayName}}</button>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="shortName">
+                  <mat-header-cell *matHeaderCellDef>Short Name Used</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <div *ngIf="element.shortNameUsed==0">
+                      No
+                    </div>
+                    <div *ngIf="element.shortNameUsed!=0">
+                      Yes
+                    </div>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="openNewTab">
+                  <mat-header-cell *matHeaderCellDef>New Tab</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <div *ngIf="element.openNewTab==0">
+                      No
+                    </div>
+                    <div *ngIf="element.openNewTab!=0">
+                      Yes
+                    </div>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="headerLanguage">
+                  <mat-header-cell *matHeaderCellDef>Lang</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.headerLanguage}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="callToActionLine1">
+                  <mat-header-cell *matHeaderCellDef>Call To Action Line 1</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.callToActionLine1}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="callToActionLine2">
+                  <mat-header-cell *matHeaderCellDef>Call To Action Line 2</mat-header-cell>
+                  <mat-cell *matCellDef="let element">{{element.callToActionLine2}}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="urlString">
+                  <mat-header-cell *matHeaderCellDef>URL</mat-header-cell>
+                  <mat-cell *matCellDef="let element"><a target="_blank" href={{element.urlString}}>
+                      {{element.urlString}}</a></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="delete">
+                  <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                  <mat-cell *matCellDef="let element"><button mat-button (click)="deleteRecord(element.firebaseID)">
+                      <mat-icon>delete</mat-icon>
+                    </button></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="qrcode">
+                  <mat-header-cell *matHeaderCellDef>QR Code</mat-header-cell>
+                  <mat-cell *matCellDef="let element"><input type="image" (click)="makeQRCode(element.id)"
+                      style="width:50px;height:50px;" src="https://qrc.ninja/wp-content/uploads/2019/01/qr-code.png" />
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+              </mat-table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

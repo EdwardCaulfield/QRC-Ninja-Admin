@@ -1,0 +1,52 @@
+<h1>{{data.title}}</h1>
+<div mat-dialog-content style="width:800px;">
+        <!-- <form class="example-form" (ngSubmit)="onSubmit()"> -->
+        <form class="top-level-form" style="height:800px;" (ngSubmit)="onSubmit()">
+            <mat-card style="width:70%; height:500px;" class="example-form">
+                    <mat-form-field style="margin-top: -10;">
+                            <input #name="ngModel" id="name" class="form-control" matInput minlength="1" maxlength={{maxNameLength}} placeholder="Name" type="text" required [(ngModel)]="qrCodeData.displayName" name="name">
+                            <div *ngIf="name.errors">
+                                A name of up to {{maxNameLength}} characters is required.
+                            </div>
+                            <div *ngIf="!name.errors">
+                                {{maxNameLength - qrCodeData.displayName.length}} characters remaining.
+                            </div>
+                        </mat-form-field>
+                        <mat-form-field style="margin-top: -20;">
+                            <input #urlString="ngModel"
+                            matInput placeholder="URL for QR Code" minlength="8" required [(ngModel)]="qrCodeData.urlString" name="url">
+                            <div *ngIf="urlString.errors">
+                                A URL is required.
+                            </div>        
+                        </mat-form-field>
+                        <mat-form-field style="margin-top: -20;">
+                            <input matInput #CTALine1="ngModel"  minlength="1" maxlength={{maxCallToActionLength}} placeholder="Call to action line 1" required [(ngModel)]="qrCodeData.callToActionLineA" name="callToActionLine1">
+                            <div *ngIf="CTALine1.errors">
+                                A Call To Action of up to {{maxCallToActionLength}} characters is required.
+                            </div>        
+                            <div *ngIf="!CTALine1.errors">
+                                {{maxCallToActionLength - qrCodeData.callToActionLineA.length}} characters remaining.
+                            </div>
+                        </mat-form-field>
+                        <mat-form-field style="margin-top: -20;">
+                            <input matInput #CTALine2="ngModel"  minlength="0" maxlength={{maxCallToActionLength}} placeholder="Call to action line 2"  [(ngModel)]="qrCodeData.callToActionLineB" name="callToActionLine2">
+                            <div *ngIf="CTALine2.errors || (qrCodeData.callToActionLineB.length == 0)">
+                                A Call To Action of up to {{maxCallToActionLength}} characters is allowed.
+                            </div>        
+                            <div *ngIf="!CTALine2.errors && (qrCodeData.callToActionLineB.length > 0)">
+                                {{maxCallToActionLength - qrCodeData.callToActionLineB.length}} characters remaining.
+                            </div>
+                        </mat-form-field>
+                         <mat-checkbox matInput [(ngModel)]="qrCodeData.shortNameUsed" name="shortNameUsed">Use Short Name</mat-checkbox>
+                        <br>
+                        <button style="width: 500px; left: 0px;"  mat-raised-button type="submit" color="primary">Save</button>
+                        <button style="width: 500px; margin-left: 20px; " mat-raised-button class="close" (click)="onNoClick()" color="warn">Cancel</button>
+                                    
+            </mat-card>
+            <div>
+                <!-- <button style="width: 500px; margin-left: 20px;" *ngIf="!name.errors && !urlString.errors && !CTALine1.errors && !CTALine2.errors"  mat-raised-button type="submit" color="primary">Save</button> -->
+            </div>    
+
+    </form>
+</div>
+
