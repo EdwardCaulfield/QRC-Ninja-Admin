@@ -47,6 +47,7 @@ export class DataService {
   createKeyRecord( shortName: string): Observable<number> {
 
     if (!!this.baseURL) {
+      
      return this.http.post(`${this.baseURL}${this.file_AddKey}`, { data: shortName })
         .pipe(map((res) => {
           let errorFound = res['error'];

@@ -112,6 +112,12 @@ export class FirebaseService {
 
   }
 
+  getAllTranslationPairs( ) {
+
+    return this.dataBase.collection(this.translationCollectionName).get();
+
+  }
+
   getTranslationPair( shortName: string ) {
 
     return this.dataBase

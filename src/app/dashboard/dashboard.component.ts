@@ -190,9 +190,19 @@ export class DashboardComponent  implements  OnInit {
         this.dataService.createUserRecord( record )
           .subscribe( result => {
             console.log("Create record result is : " + result.id);
-          })
+          });
+
+        if ( record.shortNameUsed ) {
+          this.dataService.createKeyRecord(record.shortName)
+            .subscribe( result => {
+              console.log("Create key result is : " + result);
+            });
+        }
+
       });
     }
+
+
     //     if (!!this.userRecords ) {
 
 //       this.firebase.storeAllRecords(this.firebaseKey, this.userID, this.userRecords);
@@ -598,7 +608,6 @@ export class DashboardComponent  implements  OnInit {
 
       if ( querySnapshot.empty ) {
 
-        debugger;
         this.firebase.addUser( this.userID ).then(
           result => {
             this.firebaseKey = result.id;
@@ -631,8 +640,7 @@ export class DashboardComponent  implements  OnInit {
                 //              console.log( newRecord.displayName +  " has a shortname of " + newRecord.shortName );
                 this.firebase.createTranslationPair(newRecord, this.dontUpdate);
 
-              } else
-                console.log(newRecord.displayName + " has no shortname ");
+              } 
 
               this.newUserRecords.push(newRecord);
 
@@ -672,7 +680,7 @@ export class DashboardComponent  implements  OnInit {
   
   getUserIDandRecords() {
 
-    console.log("Getting user id and records");
+//    console.log("Getting user id and records");
 
     if ( this.userIsLoggedIn() ) {
 
@@ -790,7 +798,7 @@ export class DashboardComponent  implements  OnInit {
 
   doGoogleLogin() {
     
-   console.log("Doing fake login");
+//   console.log("Doing fake login");
 
             // this.getUserIDandRecords();
 
