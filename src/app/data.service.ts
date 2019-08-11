@@ -149,7 +149,7 @@ obfuscateRecordID( id: number ) : number {
 
 }
 
-updateRecord( record: QRC_Record ) : Observable<QRC_Record> {
+updateRecord( record: QRC_Record ) : Observable<any> {
  
   let newRecord = {...record}; // clone the record and obfuscate it
   newRecord.id = this.obfuscateRecordID( newRecord.id );
@@ -158,13 +158,14 @@ updateRecord( record: QRC_Record ) : Observable<QRC_Record> {
 
     return this.http.post(`${this.baseURL}${this.file_Update}`, { data: newRecord })
       .pipe( map((res) => {
+        debugger;
         let errorFound = res['error'];
         if ( errorFound ) {
           console.log(this.message_ErrorStoringserRecords + errorFound);
           return errorFound;  
         } else {
             
-          return res['data'];
+          return res;
         }
       }),
       catchError( this.handleError )

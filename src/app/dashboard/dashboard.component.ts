@@ -1212,35 +1212,44 @@ export class DashboardComponent  implements  OnInit {
     if ( record.shortNameUsed && !record.shortName) {
       root.saveNewShortName(0, root.updateRecord, root);
     } else {
-  
-//      root.firebase.updateRecord(root.activeRecord, root.firebaseKey);
-      root.dataService.updateRecord(root.activeRecord);
+
+      debugger;  
       //
       // Update the shortname information if it is used
       if ( root.activeRecord.shortNameUsed && !root.activeRecord.shortName ) {  
         root.saveNewShortName(0, root.updateRecord, root);
         //root.firebase.createTranslationPair( root.activeRecord, root.updateIfFound );
       }
-      //
-      // Assume (bad! bad! bad!) the database is successfully updated, update the local
-      // records
-      //
-//      let recordToUpdate = root.getRecordByID(root.activeRecord.firebaseID)
-      let recordToUpdate = root.getRecordByID(root.activeRecord.id)
-      //
-      // We don't track what has changed, so just update all possible records.
-      //
-      recordToUpdate.displayName = root.activeRecord.displayName;
-      recordToUpdate.openNewTab = root.activeRecord.openNewTab;
-      recordToUpdate.urlString = root.activeRecord.urlString;
-      recordToUpdate.headerLanguage = root.activeRecord.headerLanguage;
-      recordToUpdate.callToActionLine1 = root.activeRecord.callToActionLine1;
-      recordToUpdate.callToActionLine2 = root.activeRecord.callToActionLine2;
-      recordToUpdate.shortNameUsed = root.activeRecord.shortNameUsed;
-      recordToUpdate.shortName = root.activeRecord.shortName;
-      recordToUpdate.dateLastModified = JSON.stringify(new Date());
+      //      root.firebase.updateRecord(root.activeRecord, root.firebaseKey);
+      root.dataService.updateRecord(root.activeRecord)
+        .subscribe(result => {
+          let error = result['error'];
+          if (!!error) {
+            console.log("Error updating record : " + error);
+          } else {
+            //
+            // The database is successfully updated, so update the local records
+            //
+            //      let recordToUpdate = root.getRecordByID(root.activeRecord.firebaseID)
+            let recordToUpdate = root.getRecordByID(root.activeRecord.id)
+            //
+            // We don't track what has changed, so just update all possible records.
+            //
+            recordToUpdate.displayName = root.activeRecord.displayName;
+            recordToUpdate.openNewTab = root.activeRecord.openNewTab;
+            recordToUpdate.urlString = root.activeRecord.urlString;
+            recordToUpdate.headerLanguage = root.activeRecord.headerLanguage;
+            recordToUpdate.callToActionLine1 = root.activeRecord.callToActionLine1;
+            recordToUpdate.callToActionLine2 = root.activeRecord.callToActionLine2;
+            recordToUpdate.shortNameUsed = root.activeRecord.shortNameUsed;
+            recordToUpdate.shortName = root.activeRecord.shortName;
+            recordToUpdate.dateLastModified = JSON.stringify(new Date());
 
-      root.clearActiveRecord(root);
+            root.clearActiveRecord(root);
+
+          }
+
+        });
 
 
     }
