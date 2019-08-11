@@ -67,7 +67,7 @@ export class DataService {
     }
   }
 
-createUserRecord( record: QRC_Record ): Observable<QRC_Record> {
+createUserRecord( record: QRC_Record ): Observable<any> {
 
   record.id = this.obfuscateRecordID( 1 );
 
@@ -77,9 +77,9 @@ createUserRecord( record: QRC_Record ): Observable<QRC_Record> {
         let errorFound = res['error'];
         if ( errorFound ) {
           console.log(this.message_ErrorStoringserRecords + errorFound);
-          return errorFound;  
+          return res;  
         } else {
-          return res['data'];
+          return res;
         }
       }),
       catchError( this.handleError )
@@ -127,7 +127,7 @@ deleteSQLRecord( id: number ) : Observable<QRC_Record>  {
             return errorFound;  
           }
          } else {
-          return of( ); 
+          return of( res ); 
         }
       }),
       catchError( this.handleError )

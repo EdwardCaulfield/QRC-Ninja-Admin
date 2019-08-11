@@ -6,7 +6,7 @@ import 'rxjs/add/operator/debounceTime';
 
 import { DataService } from '../data.service'
 import { AuthService } from '../auth.service';
-import { FirebaseService } from '../firebase.service';
+//import { FirebaseService } from '../firebase.service';
 import { RestAPIService } from '../rest-api.service';
 import { QRC_Record } from '../qrc-record';
 
@@ -23,8 +23,8 @@ export class DashboardComponent  implements  OnInit {
 
   googleDisplayName = "";
   //loggedIn= false;
-  firebaseKey: string;
-  firebaseEmpty: boolean;
+//  firebaseKey: string;
+//  firebaseEmpty: boolean;
   dontUpdate = false; // kinda confusing - it means we don't update a record if found
   updateIfFound = true;
   qrcodeSize = 150;
@@ -145,7 +145,7 @@ export class DashboardComponent  implements  OnInit {
     private dataService: DataService, 
     private authService: AuthService,
     private api: RestAPIService, 
-    private firebase: FirebaseService,
+//    private firebase: FirebaseService,
     public dialog: MatDialog
     
     ) { }
@@ -474,7 +474,8 @@ export class DashboardComponent  implements  OnInit {
     if (!!this.newUserRecords ) {
 
       foundRecord = this.newUserRecords.find( record  => 
-        (record.firebaseID != this.activeRecord.firebaseID) && ( record.displayName == this.activeRecord.displayName )
+        (record.id != this.activeRecord.id) && (record.displayName == this.activeRecord.displayName)
+//          (record.firebaseID != this.activeRecord.firebaseID) && (record.displayName == this.activeRecord.displayName)
       );
     
     }
@@ -592,73 +593,73 @@ export class DashboardComponent  implements  OnInit {
 
   getUserRecords( ) {
 
-//     this.dataService.getUserRecords(this.userID)
-//       .subscribe(result => {
-//         this.userRecords = result;
-// //        this.recordCount = this.newUserRecords.length;
-//         this.userRecords.forEach(record => {
-//           record.shortNameUsed = record.shortNameUsed == "0" ? false : true;
-//           record.openNewTab = record.openNewTab == "0" ? false : true;
-//         })
-//       });
+    this.dataService.getUserRecords(this.userID)
+      .subscribe(result => {
+        this.newUserRecords = result;
+        this.recordCount = this.newUserRecords.length;
+        this.newUserRecords.forEach(record => {
+          record.shortNameUsed = record.shortNameUsed == "0" ? false : true;
+          record.openNewTab = record.openNewTab == "0" ? false : true;
+        })
+      });
 
-    this.firebase.getUserRecordsDoc(this.userID).subscribe( querySnapshot => {
-      //
-      // The snapshot will be empty if there is no user data
+    // this.firebase.getUserRecordsDoc(this.userID).subscribe( querySnapshot => {
+    //   //
+    //   // The snapshot will be empty if there is no user data
 
-      if ( querySnapshot.empty ) {
+    //   if ( querySnapshot.empty ) {
 
-        this.firebase.addUser( this.userID ).then(
-          result => {
-            this.firebaseKey = result.id;
-            this.getUserRecords();
-          }
-        ) ;
+    //     this.firebase.addUser( this.userID ).then(
+    //       result => {
+    //         this.firebaseKey = result.id;
+    //         this.getUserRecords();
+    //       }
+    //     ) ;
 
-      }  else {  // User exists and has records
+    //   }  else {  // User exists and has records
         
-        querySnapshot.forEach(doc => {
+    //     querySnapshot.forEach(doc => {
 
-          this.firebaseKey = doc.id;
-          //        console.log("The key is : " + this.firebaseKey);
-          this.firebase.getUserRecords(this.firebaseKey).subscribe(results => {
+    //       this.firebaseKey = doc.id;
+    //       //        console.log("The key is : " + this.firebaseKey);
+    //       this.firebase.getUserRecords(this.firebaseKey).subscribe(results => {
 
-            this.newUserRecords = new Array<QRC_Record>();
-            results.forEach(record => {
+    //         this.newUserRecords = new Array<QRC_Record>();
+    //         results.forEach(record => {
 
-              let newRecord = this.firebase.decodeRecord(record.payload.doc.data() as QRC_Record);
-              newRecord.firebaseID = record.payload.doc.id;
+    //           let newRecord = this.firebase.decodeRecord(record.payload.doc.data() as QRC_Record);
+    //           newRecord.firebaseID = record.payload.doc.id;
 
-              // let newRecord = this.firebase.decodeRecord(  record.data() as QRC_Record );
-              // newRecord.firebaseID = record.id;
+    //           // let newRecord = this.firebase.decodeRecord(  record.data() as QRC_Record );
+    //           // newRecord.firebaseID = record.id;
 
-              //
-              // If a translation pair doesn't exist, have one created
-              //
-              if (newRecord.shortNameUsed) {
+    //           //
+    //           // If a translation pair doesn't exist, have one created
+    //           //
+    //           if (newRecord.shortNameUsed) {
 
-                //              console.log( newRecord.displayName +  " has a shortname of " + newRecord.shortName );
-                this.firebase.createTranslationPair(newRecord, this.dontUpdate);
+    //             //              console.log( newRecord.displayName +  " has a shortname of " + newRecord.shortName );
+    //             this.firebase.createTranslationPair(newRecord, this.dontUpdate);
 
-              } 
+    //           } 
 
-              this.newUserRecords.push(newRecord);
+    //           this.newUserRecords.push(newRecord);
 
-            });
+    //         });
 
-            this.recordCount = this.newUserRecords.length;
-            this.newUserRecords.sort(this.compareByDisplayName);
-            // this.recordCount = this.userRecords.length;
+    //         this.recordCount = this.newUserRecords.length;
+    //         this.newUserRecords.sort(this.compareByDisplayName);
+    //         // this.recordCount = this.userRecords.length;
 
-            // this.table.renderRows();
+    //         // this.table.renderRows();
 
-          });
+    //       });
 
-        });
+    //     });
 
-      }
+    //   }
 
-    });
+    // });
 
   }
   
@@ -784,50 +785,52 @@ export class DashboardComponent  implements  OnInit {
 
   ngOnInit() {
 
-    // this.prepareCanvas();
+    this.prepareCanvas();
 
-//    this.getUserIDandRecords();
+    this.getUserIDandRecords();
 
-     this.initializeActiveRecord();
+    this.initializeActiveRecord();
 
-    // this.initializeQRCode();
+    this.initializeQRCode();
 
-    this.doGoogleLogin();
+    //    this.doGoogleLogin();
+
+    this.myForm.valueChanges.subscribe(data => this.monitorInputData(data));
 
   }
 
   doGoogleLogin() {
     
-//   console.log("Doing fake login");
+    this.getUserIDandRecords();
 
-            // this.getUserIDandRecords();
+    this.prepareCanvas();
 
-            // this.prepareCanvas();
+    this.initializeQRCode();
 
-            // this.initializeQRCode();
+    this.myForm.valueChanges.subscribe(data => this.monitorInputData(data));
 
-            // this.myForm.valueChanges.subscribe(data => this.monitorInputData(data));
+//    this.table.renderRows();
 
-    if (!this.authService.userIsLoggedIn()) {
-      this.authService.doGoogleLogin()
-        .then(result => {
-          if (!!result && !!result.user) {
+    // if (!this.authService.userIsLoggedIn()) {
+    //   this.authService.doGoogleLogin()
+    //     .then(result => {
+    //       if (!!result && !!result.user) {
 
-            this.googleDisplayName = result.user.displayName;
+    //         this.googleDisplayName = result.user.displayName;
             
-            this.getUserIDandRecords();
+    //         this.getUserIDandRecords();
 
-            this.prepareCanvas();
+    //         this.prepareCanvas();
 
-            this.initializeQRCode();
+    //         this.initializeQRCode();
 
-            this.myForm.valueChanges.subscribe(data => this.monitorInputData(data));
+    //         this.myForm.valueChanges.subscribe(data => this.monitorInputData(data));
 
-          } else {
-          }
-        });
+    //       } else {
+    //       }
+    //     });
 
-    }
+    // }
   }
 
   updateField( fieldName: string ) : void {
@@ -1001,7 +1004,6 @@ export class DashboardComponent  implements  OnInit {
   
   clearActiveRecord( root?: any ) :void {
 
-    alert("This worked!");
     root = root || this;
 
     root.activeRecord.displayName = root.defaultString;
@@ -1034,7 +1036,6 @@ export class DashboardComponent  implements  OnInit {
   }
 
   updateRecordDisplay( root?: any ) : void {
-    console.log("Called to update record display");
     root = root || this;
 
     root.qrCodeGenerated = false;
@@ -1072,6 +1073,7 @@ export class DashboardComponent  implements  OnInit {
       this.createUserRecord(this.activeRecord, this);    
     }
 
+    
   }
 
   saveNewShortName( depth: number, finalOperation: Function, root?: any ) {
@@ -1079,24 +1081,37 @@ export class DashboardComponent  implements  OnInit {
 
     if ( depth++ < root.maxRecursionDepth ) {
 
-//      let newShortName = root.generateShortName();
       let newRecord = { ...this.activeRecord } as QRC_Record;
       newRecord.shortName = root.generateShortName();
-      root.firebase.createTranslationPair( newRecord, root.dontUpdate ).subscribe( status => {
-        if (status == root.firebase.storageMessage_duplicateRecordErrror ) {
-          root.saveNewShortName(depth, finalOperation, root );
-        }
-        else if (status == root.firebase.storageMessage_unknownError ) {
-          console.log("Unknown error storing record");
-        } else {
-          //
-          // to get here, the save must have worked.
-          //
-          root.activeRecord.shortName = newRecord.shortName;
-          finalOperation( root.activeRecord, root );
-        }
+      root.dataService.createKeyRecord( newRecord.shortName)
+        .subscribe( status => {
+          if ( status == root.dataService.storageMessage_duplicateRecordErrror) {
+            root.saveNewShortName(depth, finalOperation, root);
+          } else if ( status == root.dataService.storageMessage_unknownError ) {
+            console.log("Unknown error storing record");
+          } else {
+            //
+            // to get here, the save must have worked.
+            //
+            root.activeRecord.shortName = newRecord.shortName;
+            finalOperation(root.activeRecord, root);
+          }
+        });
+      // root.firebase.createTranslationPair( newRecord, root.dontUpdate ).subscribe( status => {
+      //   if (status == root.firebase.storageMessage_duplicateRecordErrror ) {
+      //     root.saveNewShortName(depth, finalOperation, root );
+      //   }
+      //   else if (status == root.firebase.storageMessage_unknownError ) {
+      //     console.log("Unknown error storing record");
+      //   } else {
+      //     //
+      //     // to get here, the save must have worked.
+      //     //
+      //     root.activeRecord.shortName = newRecord.shortName;
+      //     finalOperation( root.activeRecord, root );
+      //   }
 
-      });
+      // });
     } else {
       console.log("Failed to find a new key");
     }
@@ -1120,28 +1135,57 @@ export class DashboardComponent  implements  OnInit {
 
     //   });    
 
-    if (!!root.firebaseKey) {
+    // if (!!root.firebaseKey) {
 
 //      console.log("Creating user record");
-      root.firebase.createUserRecord(root.activeRecord, root.firebaseKey);
-      root.newUserRecords.push(root.activeRecord);
-      //
-      // Just in case the user has changed any value for the short name
-      //
-      if ( root.activeRecord.shortNameUsed ) {
-        root.firebase.createTranslationPair( root.activeRecord, root.updateIfFound );
-      }
-      root.clearActiveRecord();
+//      root.firebase.createUserRecord(root.activeRecord, root.firebaseKey);
+      root.dataService.createUserRecord(root.activeRecord )
+        .subscribe( result => {
 
-    } else {
-      console.log("Create User Record: Firebase key not defined");
-    }
+          //
+          // Lazy error handling, because an error should have been logged previously
+          //
+          let error = result['error'];
+          if (!!error)
+            return; 
+
+          result = result['data'];
+
+          root.newUserRecords.push(result);
+          root.recordCount = root.newUserRecords.length;
+          root.table.renderRows();
+          //
+          // Just in case the user has changed any value for the short name
+          //
+          if (root.activeRecord.shortNameUsed && (root.activeRecord.shortName.length == 0)) {
+            let newShortName = this.generateShortName();
+            root.dataService.createKeyRecord( newShortName )
+              .subscribe(result => {
+                if ( result == this.dataService.storageMessage_duplicateRecordErrror ){
+                  console.log("Duplicate shortname generated");
+                } else if ( result == this.dataService.storageMessage_unknownError) {
+                  console.log("Unknown error");
+                } else if ( result == this.dataService.storageMessage_success) {
+                  root.newUserRecords.shortName = newShortName;
+                } else {
+                  console.log("Unknown error");
+                }
+              });
+          }
+          root.clearActiveRecord();
+
+        });
+
+    // } else {
+    //   console.log("Create User Record: Firebase key not defined");
+    // }
 
   }
 
-  getRecordByID( id: string ) : QRC_Record {
+  getRecordByID( id: number ) : QRC_Record {
 
-    let recordArray = this.newUserRecords.filter( record => record.firebaseID == id );
+//    let recordArray = this.newUserRecords.filter(record => record.firebaseID == id);
+    let recordArray = this.newUserRecords.filter(record => record.id == id);
     if ( recordArray.length > 1 )  // we should really throw an error and die
       console.log("OOOpppsss.... more than one record with the same id!!");
     else if ( recordArray.length == 0 )
@@ -1158,28 +1202,31 @@ export class DashboardComponent  implements  OnInit {
 
   updateRecord( record: QRC_Record, root?: any ) {
     root = root || this;
-    if (!root.firebaseKey) {
-      console.log("Update Record - Firebasekey not defined");
-    }
+    // if (!root.firebaseKey) {
+    //   console.log("Update Record - Firebasekey not defined");
+    // }
     //
     // If we are supposed to use a shortname, but one has not been created for it yet, we make a new short name before
     // the record is updated
     //
-    else if ( record.shortNameUsed && !record.shortName) {
+    if ( record.shortNameUsed && !record.shortName) {
       root.saveNewShortName(0, root.updateRecord, root);
     } else {
   
-      root.firebase.updateRecord(root.activeRecord, root.firebaseKey );
+//      root.firebase.updateRecord(root.activeRecord, root.firebaseKey);
+      root.dataService.updateRecord(root.activeRecord);
       //
       // Update the shortname information if it is used
-      if ( root.activeRecord.shortNameUsed ) {  
-        root.firebase.createTranslationPair( root.activeRecord, root.updateIfFound );
+      if ( root.activeRecord.shortNameUsed && !root.activeRecord.shortName ) {  
+        root.saveNewShortName(0, root.updateRecord, root);
+        //root.firebase.createTranslationPair( root.activeRecord, root.updateIfFound );
       }
       //
       // Assume (bad! bad! bad!) the database is successfully updated, update the local
       // records
       //
-      let recordToUpdate = root.getRecordByID(root.activeRecord.firebaseID)
+//      let recordToUpdate = root.getRecordByID(root.activeRecord.firebaseID)
+      let recordToUpdate = root.getRecordByID(root.activeRecord.id)
       //
       // We don't track what has changed, so just update all possible records.
       //
@@ -1206,11 +1253,11 @@ export class DashboardComponent  implements  OnInit {
 
   }
 
-  editRecord ( id: string ) {
+  editRecord ( id: number ) {
     //
     // Clone the record, don't just point to it
     // Otherwise, erasing the display will do "bad things"
-    //
+    //    
     let recordToClone = this.getRecordByID( id ) ;
     this.activeRecord = { ...recordToClone }; // clone
     this.originalRecord = { ...recordToClone }; 
@@ -1249,39 +1296,42 @@ export class DashboardComponent  implements  OnInit {
 
   }
 
-  deleteRecord(id: string) {
+  deleteRecord(id: number) {
     //
     // Confirm the deletion.  Once this is done, delete the record
     // in the online database.  When this is successful, delete
     // the record locally. 
     //
-    if (!this.firebaseKey) {
+    // if (!this.firebaseKey) {
 
-      console.log("Delete Record - Firebasekey not defined");
+    //   console.log("Delete Record - Firebasekey not defined");
 
-    } else if (confirm(this.messageDeleteConfirmation_Part1 + this.getRecordByID(id).displayName + this.messageDeleteConfirmation_Part2)) {
+    // } else 
+    if (confirm(this.messageDeleteConfirmation_Part1 + this.getRecordByID(id).displayName + this.messageDeleteConfirmation_Part2)) {
       //
       // We have to delete the firebase record first, as it depends
       // upon the SQL record
       //      
-      let fbRecord = this.newUserRecords.find( record => record.firebaseID == id );
-      if ( !!fbRecord ) {
-        this.firebase.deleteRecord( this.firebaseKey, fbRecord );
-        this.newUserRecords = this.newUserRecords.filter(record =>
-          record.firebaseID != id);
-      }
+//       let fbRecord = this.newUserRecords.find( record => record.id == id );
+//       if ( !!fbRecord ) {
+// //        this.firebase.deleteRecord(this.firebaseKey, fbRecord);
+//         this.dataService.deleteSQLRecord(fbRecord.id).subscribe( record => {
+//           console.log("Record " + record.id + " deleted");
+//         });
+//         this.newUserRecords = this.newUserRecords.filter(record =>
+//           record.id != id);
+//       }
       
-      // this.table.renderRows();
+//      this.table.renderRows();
  
-      // this.dataService.deleteSQLRecord(id)
-      //   .subscribe(() => {
-      //     this.newUserRecords = this.newUserRecords.filter(record =>
-      //       record.firebaseID != id);
-      //     this.recordCount = this.newUserRecords.length;
-      //     this.clearActiveRecord();
-      //   });
+      this.dataService.deleteSQLRecord(id)
+        .subscribe(() => {
+          this.newUserRecords = this.newUserRecords.filter(record =>
+            record.id != id);
+          this.recordCount = this.newUserRecords.length;
+          this.clearActiveRecord();
+        });
     }
-
 
   }
 

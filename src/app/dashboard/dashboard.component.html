@@ -107,7 +107,7 @@
     <a *ngIf="userIsLoggedIn()" href={{imageData}} download="downloadFileName" [disabled]="downloadButtonDisabled" mat-raised-button
       color="primary" class="download-button" #downloadButton>Download Image</a>
       <div [hidden]="!isAdmin">
-        <button mat-raised-button (click)="copyFromFirebaseToSQL()" class="download-button" color="primary" >Copy to SQL</button>
+        <button mat-raised-button (click)="copyFromFirebaseToSQL()" class="download-button" color="primary" >Copy Firebase to SQL</button>
       </div>
   </div>
   <div class="grid-item item3" *ngIf="userIsLoggedIn()">
@@ -124,7 +124,7 @@
                 <ng-container matColumnDef="displayName">
                   <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
                   <mat-cell *matCellDef="let element"><button mat-button
-                      (click)="editRecord(element.firebaseID)">{{element.displayName}}</button>
+                      (click)="editRecord(element.id)">{{element.displayName}}</button>
                   </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="shortName">
@@ -168,7 +168,7 @@
                 </ng-container>
                 <ng-container matColumnDef="delete">
                   <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                  <mat-cell *matCellDef="let element"><button mat-button (click)="deleteRecord(element.firebaseID)">
+                  <mat-cell *matCellDef="let element"><button mat-button (click)="deleteRecord(element.id)">
                       <mat-icon>delete</mat-icon>
                     </button></mat-cell>
                 </ng-container>

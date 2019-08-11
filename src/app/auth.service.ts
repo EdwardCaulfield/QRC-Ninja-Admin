@@ -12,25 +12,25 @@ export class AuthService {
 
   constructor( public afAuth: AngularFireAuth ) {
 
-    this.isLoggedIn = afAuth.auth.currentUser == null ? false : true;
+//    this.isLoggedIn = afAuth.auth.currentUser == null ? false : true;
 
    }
 
   userIsLoggedIn() {
 
-//    return true;
-    return this.isLoggedIn;
+    return true;
+//    return this.isLoggedIn;
 
   }
   doGoogleLogout() {
 
-    this.afAuth.auth.signOut();
+//    this.afAuth.auth.signOut();
 
   }
 
   getAuthorizationState() {
 
-    return this.afAuth.auth.currentUser;
+//    return this.afAuth.auth.currentUser;
 
   }
 
