@@ -106,9 +106,9 @@
           #downloadButton>Download Image</button> -->
     <a *ngIf="userIsLoggedIn()" href={{imageData}} download="downloadFileName" [disabled]="downloadButtonDisabled" mat-raised-button
       color="primary" class="download-button" #downloadButton>Download Image</a>
-      <div [hidden]="!isAdmin">
+      <!-- <div [hidden]="!isAdmin">
         <button mat-raised-button (click)="copyFromFirebaseToSQL()" class="download-button" color="primary" >Copy Firebase to SQL</button>
-      </div>
+      </div> -->
   </div>
   <div class="grid-item item3" *ngIf="userIsLoggedIn()">
     <div class="container" style="z-index: 1;">

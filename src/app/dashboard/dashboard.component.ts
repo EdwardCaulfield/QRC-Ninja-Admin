@@ -183,43 +183,43 @@ export class DashboardComponent  implements  OnInit {
     return !!AdminFound;
   }
 
-  public copyFromFirebaseToSQL() : void {
-    //
-    if (!!this.newUserRecords) {
-      this.newUserRecords.forEach( (record) => {
-        this.dataService.createUserRecord( record )
-          .subscribe( result => {
-            console.log("Create record result is : " + result.id);
-          });
+//   public copyFromFirebaseToSQL() : void {
+//     //
+//     if (!!this.newUserRecords) {
+//       this.newUserRecords.forEach( (record) => {
+//         this.dataService.createUserRecord( record )
+//           .subscribe( result => {
+//             console.log("Create record result is : " + result.id);
+//           });
 
-        if ( record.shortNameUsed ) {
-          this.dataService.createKeyRecord(record.shortName)
-            .subscribe( result => {
-              console.log("Create key result is : " + result);
-            });
-        }
-
-      });
-    }
-
-
-    //     if (!!this.userRecords ) {
-
-//       this.firebase.storeAllRecords(this.firebaseKey, this.userID, this.userRecords);
-
-//       let index = 0;
-//       this.userRecords.forEach(record => {
-
-//         if (record.shortNameUsed) {
-//           this.firebase.createTranslationPair( record );
+//         if ( record.shortNameUsed ) {
+//           this.dataService.createKeyRecord(record.shortName)
+//             .subscribe( result => {
+//               console.log("Create key result is : " + result);
+//             });
 //         }
 
-//       })
-//     } else {
-// //      console.log("What, no records?");
+//       });
 //     }
+
+
+//     //     if (!!this.userRecords ) {
+
+// //       this.firebase.storeAllRecords(this.firebaseKey, this.userID, this.userRecords);
+
+// //       let index = 0;
+// //       this.userRecords.forEach(record => {
+
+// //         if (record.shortNameUsed) {
+// //           this.firebase.createTranslationPair( record );
+// //         }
+
+// //       })
+// //     } else {
+// // //      console.log("What, no records?");
+// //     }
     
-  }
+//   }
 
   toggleOpenNewTab( newValue : boolean ) {
     //
