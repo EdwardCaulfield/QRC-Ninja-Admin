@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { MatDialog, MatTable } from '@angular/material';
 import { FormGroup } from '@angular/forms';
 
@@ -152,6 +152,7 @@ export class DashboardComponent  implements  OnInit {
 
   displayedColumns = ['displayName', 'headerLanguage', 'openNewTab', 'shortName',  'callToActionLine1', 'callToActionLine2', 'urlString', 'delete'];
    
+  @Input('this') that: any;
   @ViewChild(MatTable) table: MatTable<any>;
   @ViewChild('myCanvas') myCanvas: ElementRef;
   @ViewChild('downloadButton') downloadButton: ElementRef;
